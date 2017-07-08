@@ -23,18 +23,21 @@ var u2f = u2f || {isPolyfill: true};
 var js_api_version;
 
 /**
- * The U2F extension id
- * @const {string}
+ * Autodetect U2F extension version
  */
-// The Chrome packaged app extension ID.
-// Uncomment this if you want to deploy a server instance that uses
-// the package Chrome app and does not require installing the U2F Chrome extension.
- u2f.EXTENSION_ID = 'kmendfapggjehodndflmmgagdbamhnfd';
-// The U2F Chrome extension ID.
-// Uncomment this if you want to deploy a server instance that uses
-// the U2F Chrome extension to authenticate.
-// u2f.EXTENSION_ID = 'pfboblefjcgdjicmnffhdgionmgcdmne';
+u2f.OVERRIDE_EXTENSION_ID = 'pfboblefjcgdjicmnffhdgionmgcdmne';
+u2f.PACKAGED_EXTENSION_ID = 'kmendfapggjehodndflmmgagdbamhnfd';
 
+fetch('chrome-extension://' + u2f.OVERRIDE_EXTENSION_ID + '/u2f-comms.html')
+    .then(function(r) {
+        // The U2F Chrome extension ID.
+        u2f.EXTENSION_ID = u2f.OVERRIDE_EXTENSION_ID
+        console.log("U2F Extension: " + u2f.EXTENSION_ID);
+    }).catch(function(r) {
+        // The Chrome packaged app extension ID.
+        u2f.EXTENSION_ID = u2f.PACKAGED_EXTENSION_ID;
+        console.log("U2F Extension: " + u2f.EXTENSION_ID);
+    });
 
 /**
  * Message types for messsages to/from the extension
